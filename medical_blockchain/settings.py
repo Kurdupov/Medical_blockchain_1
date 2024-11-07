@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'patients',
+    'patients.apps.PatientsConfig',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +52,24 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'medical_blockchain.urls'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Змінити на DEBUG для більш детального логування
+            'propagate': True,
+        },
+    },
+}
+
 
 TEMPLATES = [
     {

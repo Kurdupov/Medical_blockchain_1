@@ -14,7 +14,7 @@ class PatientForm(forms.ModelForm):
 class MedicalRecordForm(forms.ModelForm):
     class Meta:
         model = MedicalRecord
-        fields = ['diagnosis', 'visit_date', 'analysis_results']
+        fields = ['diagnosis', 'visit_date', 'analysis_results', 'complaint', 'treatment']
         widgets = {
             'visit_date': forms.DateInput(format='%d.%m.%Y', attrs={'type': 'date'}),
         }

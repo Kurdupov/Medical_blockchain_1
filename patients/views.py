@@ -30,7 +30,9 @@ def create_medical_record(request, patient_id):
         form = MedicalRecordForm()
     return render(request, 'patients/create_medical_record.html', {'form': form, 'patient': patient})
 
-
+def check_records(request):
+    modified_records = MedicalRecord.validate_all_records()
+    return render(request, 'check_records.html', {'modified_records': modified_records})
 def patient_list(request):
     # Отримуємо значення пошукового запиту з GET-запиту
     query = request.GET.get('q')

@@ -14,6 +14,7 @@
             <th>Діагноз</th>
             <th>Результати аналізів</th>
             <th>Хеш</th>
+            <th>Дані</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +24,7 @@
             <td>{{ record.diagnosis }}</td>
             <td>{{ record.analysis_results }}</td>
             <td>{{ record.blockchain_hash }}</td>
+            <td>{{ record.data_status }}</td>
         </tr>
         {% endfor %}
     </tbody>
