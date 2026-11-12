@@ -1,11 +1,11 @@
 # patients/views.py
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
+
 from .forms import PatientForm, MedicalRecordForm
 from .models import Patient, MedicalRecord
-from django.shortcuts import render, get_object_or_404
-from .models import MedicalRecord, MedicalRecordHashHistory
-from django.shortcuts import render, get_object_or_404
-from .models import Patient, MedicalRecord
+from .utils import compute_record_hash
+
 
 def create_patient(request):
     if request.method == 'POST':
@@ -30,17 +30,13 @@ def create_medical_record(request, patient_id):
         form = MedicalRecordForm()
     return render(request, 'patients/create_medical_record.html', {'form': form, 'patient': patient})
 
-def check_records(request):
-    modified_records = MedicalRecord.validate_all_records()
-    return render(request, 'check_records.html', {'modified_records': modified_records})
 def patient_list(request):
     # Отримуємо значення пошукового запиту з GET-запиту
     query = request.GET.get('q')
 
     # Якщо є пошуковий запит, фільтруємо пацієнтів за ім'ям або прізвищем
     if query:
-        patients = Patient.objects.filter(first_name__icontains=query) | Patient.objects.filter(
-            last_name__icontains=query)
+        patients = Patient.objects.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query))
     else:
         # Якщо немає запиту, відображаємо всіх пацієнтів
         patients = Patient.objects.all()
@@ -50,10 +46,6 @@ def patient_list(request):
     }
 
     return render(request, 'patients/patient_list.html', context)
-def patient_list(request):
-    patients = Patient.objects.all()
-    return render(request, 'patients/patient_list.html', {'patients': patients})
-
 def patient_detail(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
     records = MedicalRecord.objects.filter(patient=patient)
@@ -70,6 +62,16 @@ def delete_medical_record(request, record_id, patient_id):
 def view_patient_hash_chain(request, pk):
     patient = get_object_or_404(Patient, pk=pk)
     records = MedicalRecord.objects.filter(patient=patient).order_by('visit_date', 'id')
+    hash_chain = []
+    previous_hash = ''
+    for record in records:
+        expected = compute_record_hash(record, previous_hash)
+        hash_chain.append({
+            'record': record,
+            'previous_hash': previous_hash or '—',
+            'current_hash': record.blockchain_hash,
+            'is_valid': record.blockchain_hash == expected,
+        })
+        previous_hash = expected
 
-
-
+    return render(request, 'patients/patient_hash_chain.html', {'patient': patient, 'hash_chain': hash_chain})

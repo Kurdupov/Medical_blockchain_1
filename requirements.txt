@@ -1,0 +1,4 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14
+# MySQL driver (not needed with DB_ENGINE=sqlite):
+mysqlclient>=2.2

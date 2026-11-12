@@ -1,19 +1,19 @@
 <!-- patients/templates/patients/patient_hash_chain.html -->
+{% extends 'base.html' %}
 {% load static %}
 
-{% extends 'base.html' %}
-
 {% block content %}
-    <h1>Цепочка хешей для пациента: {{ patient.first_name }} {{ patient.last_name }}</h1>
-    <p><a href="{% url 'patient_detail' patient.pk %}">← Назад к пациенту</a></p>
+    <h1>Ланцюжок хешів пацієнта: {{ patient.first_name }} {{ patient.last_name }}</h1>
+    <p><a href="{% url 'patient_detail' patient.pk %}">← Назад до пацієнта</a></p>
     <table class="table">
         <thead>
             <tr>
-                <th>Дата визита</th>
-                <th>Диагноз</th>
-                <th>Результаты анализов</th>
-                <th>Предыдущий хеш</th>
-                <th>Текущий хеш</th>
+                <th>Дата візиту</th>
+                <th>Діагноз</th>
+                <th>Результати аналізів</th>
+                <th>Попередній хеш</th>
+                <th>Поточний хеш</th>
+                <th>Статус</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +24,7 @@
                     <td>{{ entry.record.analysis_results }}</td>
                     <td>{{ entry.previous_hash }}</td>
                     <td>{{ entry.current_hash }}</td>
+                    <td>{% if entry.is_valid %}✓ Цілісний{% else %}✗ Ланцюжок порушено{% endif %}</td>
                 </tr>
             {% endfor %}
         </tbody>
